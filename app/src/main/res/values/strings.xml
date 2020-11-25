@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ChallengeApp</string>
+    <string name="special_product_description">This is a special product offer to you</string>
 </resources>

@@ -1,20 +1,11 @@
 package com.rsf.challengeapp.util
 
-import com.rsf.challengeapp.model.Normal
-import com.rsf.challengeapp.model.Product
-import com.rsf.challengeapp.model.Special
-import com.rsf.challengeapp.model.SpotLight
-import com.rsf.challengeapp.service.model.CashProduct
-import com.rsf.challengeapp.service.model.CommonProduct
-import com.rsf.challengeapp.service.model.FeaturedProduct
-
-fun CommonProduct.toModel(): Product {
-    val type = when(this) {
-        is CashProduct -> Special
-        is FeaturedProduct -> SpotLight
-        else -> Normal
-    }
-    return Product(
-        name, description, imageURL, type
-    )
+/**
+ * Split the String using " " as separator and returns the word in position [index]
+ * if [index] is invalid returns the word at position 0
+ * @param index the word position required
+ */
+fun String.word(index: Int): String {
+    val words = this.split(" ")
+    return if (index < words.size) words[index] else words[0]
 }
