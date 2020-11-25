@@ -8,15 +8,15 @@
     tools:context=".ui.MainActivity">
 
     <TextView
-        android:id="@+id/tvCashTittle"
+        android:id="@+id/tvCashTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
-        android:text="digio"
-        android:textSize="@dimen/item_tittle_size"
+        android:textSize="@dimen/item_title_size"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Product"/>
 
     <include
         android:id="@+id/itemCash"
@@ -27,6 +27,31 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvCashTittle" />
+        app:layout_constraintTop_toBottomOf="@id/tvCashTitle" />
+
+
+    <TextView
+        android:id="@+id/tvProductListTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="@dimen/item_title_size"
+        android:textStyle="bold"
+        android:textColor="@color/titlesAccent"
+        android:text="@string/product_list_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemCash"
+        tools:text="Products" />
+
+
+    <include
+        android:id="@+id/productListContainer"
+        layout="@layout/product_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvProductListTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

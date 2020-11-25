@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="parent_padding">16dp</dimen>
-    <dimen name="item_tittle_size">22sp</dimen>
+    <dimen name="item_title_size">22sp</dimen>
 </resources>

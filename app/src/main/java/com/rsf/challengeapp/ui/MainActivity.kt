@@ -3,19 +3,19 @@ package com.rsf.challengeapp.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rsf.challengeapp.R
+import com.rsf.challengeapp.model.Normal
 import com.rsf.challengeapp.model.Product
 import com.rsf.challengeapp.model.Special
-import com.rsf.challengeapp.repository.IProductRepository
 import com.rsf.challengeapp.util.textColor
 import com.rsf.challengeapp.util.word
 import com.rsf.challengeapp.viewmodel.MainViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_cash.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.android.synthetic.main.product_list.view.*
 import org.koin.android.ext.android.inject
 
 
@@ -30,6 +30,24 @@ class MainActivity: AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         getProducts()
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        val rv = findViewById<RecyclerView>(R.id.rvProductList)
+        with(rv) {
+            layoutManager = LinearLayoutManager(applicationContext).apply {
+                orientation = LinearLayoutManager.HORIZONTAL
+            }
+            hasFixedSize()
+            adapter = ProductListAdapter(emptyList()).apply {
+                interactionListener = ::onItemSelected
+            }
+        }
+    }
+
+    private fun onItemSelected(product: Product) {
+
     }
 
     private fun getProducts() {
@@ -38,6 +56,7 @@ class MainActivity: AppCompatActivity() {
                 products.find { it.type == Special }?.let { special ->
                     setSpecialProductView(special)
                 }
+                setProductListView(products.filter { it.type == Normal })
             }, {
                 Log.e(TAG, "Exception of $it")
             })
@@ -48,9 +67,16 @@ class MainActivity: AppCompatActivity() {
         Picasso.get()
             .load(special.imageUrl)
             .placeholder(R.drawable.ic_custom_background)
-            .into(itemCash.imageView);
+            .into(itemCash.cashBanner);
 
-        tvCashTittle.text = special.title
-        tvCashTittle.textColor(special.title.word(0), R.color.digio_color)
+        tvCashTitle.text = special.title
+        tvCashTitle.textColor(special.title.word(0), R.color.titlesAccent)
+    }
+
+    private fun setProductListView(products: List<Product>) {
+        with(productListContainer.rvProductList) {
+            (adapter as ProductListAdapter).products = products
+            adapter?.notifyDataSetChanged()
+        }
     }
 }
