@@ -24,7 +24,6 @@ class ProductDetails : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        requireActivity().actionBar?.title = "Detalhes"
         return inflater.inflate(R.layout.fragment_product_details, container, false)
     }
 
@@ -34,7 +33,10 @@ class ProductDetails : Fragment() {
         viewModel.selectedProduct?.run {
             if (type == Normal) {
                 imgIcon.isVisible = true
-                Picasso.get().load(imageUrl).into(imgIcon)
+                Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_baseline_star)
+                    .into(imgIcon)
             }
             else {
                 imgIcon.isVisible = false
@@ -43,8 +45,5 @@ class ProductDetails : Fragment() {
             tvProductTittle.text = title
             tvDescription.text = description
         }
-
-
-        Log.e("Details", "${viewModel.selectedProduct?.description}")
     }
 }
