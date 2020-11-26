@@ -14,6 +14,10 @@ import java.lang.Exception
 class ProductListAdapter(var products: List<Product>) :
     RecyclerView.Adapter<ProductListAdapter.ProductHolder>() {
 
+    companion object {
+        private const val ITEM_SIZE_PERCENTAGE = 35.0
+    }
+
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
     var interactionListener: (currency: Product) -> Unit = {}
@@ -21,10 +25,15 @@ class ProductListAdapter(var products: List<Product>) :
     class ProductHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductHolder {
-        return ProductHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_product, parent, false))
+        val itemView: View = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_product, parent, false)
+
+        val layoutParams = itemView.layoutParams
+        layoutParams.width = (parent.width * ITEM_SIZE_PERCENTAGE/100).toInt()
+        layoutParams.height = (parent.width * ITEM_SIZE_PERCENTAGE/100).toInt()
+        itemView.layoutParams = layoutParams
+
+        return ProductHolder(itemView)
     }
 
     override fun getItemCount(): Int {
