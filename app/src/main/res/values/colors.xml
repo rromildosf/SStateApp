@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#202e55</color>
     <color name="titlesAccent">#202e55</color>
+    <color name="colorLoadingBackground">#A1FAFAFA</color>
 </resources>

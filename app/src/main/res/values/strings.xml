@@ -3,4 +3,5 @@
     <string name="special_product_description">This is a special product offer to you</string>
     <string name="product_list_title">Products</string>
     <string name="greetings">Olá, %1$s</string>
+    <string name="dialog_loading_data">Loading data</string>
 </resources>
