@@ -2,9 +2,12 @@ package com.rsf.challengeapp.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.rsf.challengeapp.R
 import com.rsf.challengeapp.model.Normal
 import com.rsf.challengeapp.model.Product
@@ -15,6 +18,7 @@ import com.rsf.challengeapp.util.word
 import com.rsf.challengeapp.viewmodel.MainViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.item_cash.view.*
 import kotlinx.android.synthetic.main.product_list.view.*
 import org.koin.android.ext.android.inject
@@ -23,12 +27,16 @@ import org.koin.android.ext.android.inject
 class MainActivity: AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
+        private var username = "Maria"
     }
     private val viewModel: MainViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(toolbar as Toolbar)
+        toolbar.title = getString(R.string.greetings, username)
 
         setupProductListRecyclerView()
         setupFeaturedProductListRecyclerView()
