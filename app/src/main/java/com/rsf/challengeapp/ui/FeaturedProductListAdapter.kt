@@ -1,5 +1,6 @@
 package com.rsf.challengeapp.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class FeaturedProductListAdapter(var products: List<Product>) :
     override fun getItemCount() = products.size
 
     override fun onBindViewHolder(holder: ProductHolder, position: Int) {
+        Log.e("Bingind", "${products[position]}")
         with(holder.itemView) {
             val product = products[position]
             setOnClickListener { interactionListener.invoke(product) }

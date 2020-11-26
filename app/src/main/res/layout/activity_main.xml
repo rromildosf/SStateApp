@@ -97,4 +97,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <include layout="@layout/loading"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

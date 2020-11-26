@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,13 +14,15 @@ import com.rsf.challengeapp.model.Normal
 import com.rsf.challengeapp.model.Product
 import com.rsf.challengeapp.model.Special
 import com.rsf.challengeapp.model.SpotLight
-import com.rsf.challengeapp.util.textColor
-import com.rsf.challengeapp.util.word
+import com.rsf.challengeapp.service.model.CashProduct
+import com.rsf.challengeapp.util.*
 import com.rsf.challengeapp.viewmodel.MainViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.item_cash.view.*
+import kotlinx.android.synthetic.main.loading.*
+import kotlinx.android.synthetic.main.loading.view.*
 import kotlinx.android.synthetic.main.product_list.view.*
 import org.koin.android.ext.android.inject
 
@@ -41,6 +44,12 @@ class MainActivity: AppCompatActivity() {
         setupProductListRecyclerView()
         setupFeaturedProductListRecyclerView()
 
+        toolbar.post { // post used to wait for view layout
+            setupProductViews(createSkeletonProductList())
+        }
+
+        loading.show()
+        loading.message.text = getString(R.string.dialog_loading_data)
         getProducts()
     }
 
@@ -61,7 +70,7 @@ class MainActivity: AppCompatActivity() {
             layoutManager = LinearLayoutManager(applicationContext).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
             }
-            hasFixedSize()
+            setHasFixedSize(false)
             adapter = FeaturedProductListAdapter(emptyList()).apply {
                 interactionListener = ::onItemSelected
             }
@@ -74,14 +83,17 @@ class MainActivity: AppCompatActivity() {
 
     private fun getProducts() {
         viewModel.getProductList().observe(this) { result ->
-            result.fold({ products ->
-                products.find { it.type == Special }?.let { setSpecialProductView(it) }
-                setProductListView(products.filter { it.type == Normal })
-                setFeaturedProductListView(products.filter { it.type == SpotLight })
-            }, {
+            loading.hide()
+            result.fold({ products -> setupProductViews(products) }) {
                 Log.e(TAG, "Exception of $it")
-            })
+            }
         }
+    }
+
+    private fun setupProductViews(products: List<Product>) {
+        products.find { it.type == Special }?.let { setSpecialProductView(it) }
+        setProductListView(products.filter { it.type == Normal })
+        setFeaturedProductListView(products.filter { it.type == SpotLight })
     }
 
     private fun setSpecialProductView(special: Product) {
