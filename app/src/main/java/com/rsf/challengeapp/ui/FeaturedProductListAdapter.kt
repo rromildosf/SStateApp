@@ -52,11 +52,10 @@ class FeaturedProductListAdapter(var products: List<Product>) :
         itemView.layoutParams = layoutParams
     }
 
-//    private fun setMargin(itemView: View, margin: )
-
     private fun loadImage(product: Product, rootView: View) {
         Picasso.get()
             .load(product.imageUrl)
+            .placeholder(R.drawable.ic_default_banner)
             .into(rootView.cashBanner)
     }
 }

@@ -5,4 +5,5 @@
     <dimen name="product_item_margin">8dp</dimen>
     <dimen name="product_item_margin_large">16dp</dimen>
     <dimen name="product_item_elevation">2dp</dimen>
+    <dimen name="toolbar_title_margin">25dp</dimen>
 </resources>
