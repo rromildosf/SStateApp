@@ -6,72 +6,57 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rsf.challengeapp.R
 import com.rsf.challengeapp.model.Product
-import com.rsf.challengeapp.model.SpotLight
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_cash.view.*
-import kotlinx.android.synthetic.main.item_product.view.*
-import kotlinx.coroutines.*
-import java.lang.Exception
 
-class ProductListAdapter(var products: List<Product>) :
-    RecyclerView.Adapter<ProductListAdapter.ProductHolder>() {
 
-    companion object {
-        const val TYPE_FEATURED = 1
-        const val TYPE_PRODUCT = 2
-    }
+class FeaturedProductListAdapter(var products: List<Product>) :
+    RecyclerView.Adapter<FeaturedProductListAdapter.ProductHolder>() {
 
-    private val job = SupervisorJob()
-    private val scope = CoroutineScope(Dispatchers.IO + job)
     var interactionListener: (currency: Product) -> Unit = {}
 
     class ProductHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductHolder {
-        val layout = if (viewType == TYPE_FEATURED) R.layout.item_cash else R.layout.item_product
 
-        return ProductHolder(
-            LayoutInflater
-                .from(parent.context)
-                .inflate(layout, parent, false))
+        val inflater = LayoutInflater.from(parent.context)
+        val itemView: View = inflater.inflate(R.layout.item_cash, parent, false)
+        setMargins(itemView, parent)
+
+        return ProductHolder(itemView)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (products[position].type == SpotLight) TYPE_FEATURED else TYPE_PRODUCT
-    }
-
-    override fun getItemCount(): Int {
-        return products.size
-    }
+    override fun getItemCount() = products.size
 
     override fun onBindViewHolder(holder: ProductHolder, position: Int) {
         with(holder.itemView) {
             val product = products[position]
             setOnClickListener { interactionListener.invoke(product) }
-
-            imageIcon.contentDescription = product.title
-            tvHelper.text = product.title
+            cashBanner.contentDescription = product.title
 
             loadImage(product, this)
         }
     }
 
-    private fun loadImage(product: Product, rootView: View) {
-        scope.launch {
-            try {
-                val image = Picasso.get()
-                    .load(product.imageUrl)
-                    .get()
+    private fun setMargins(itemView: View, parent: ViewGroup) {
+        val layoutParams = itemView.layoutParams
+        layoutParams.width = (parent.width * 0.8).toInt()
 
-                withContext(Dispatchers.Main) {
-                    if (image != null) {
-                        rootView.tvHelper.visibility = View.GONE
-                        rootView.imageIcon.setImageBitmap(image)
-                    }
-                }
-            } catch (ex: Exception) {
-                rootView.tvHelper.visibility = View.VISIBLE
-            }
+        val margins = itemView.context.resources.getDimensionPixelSize(R.dimen.product_item_margin)
+        val margin = itemView.context.resources.getDimensionPixelSize(R.dimen.product_item_margin_large)
+        with(layoutParams as ViewGroup.MarginLayoutParams) {
+            marginEnd = margin
+            topMargin = margins
+            bottomMargin = margins
         }
+        itemView.layoutParams = layoutParams
+    }
+
+//    private fun setMargin(itemView: View, margin: )
+
+    private fun loadImage(product: Product, rootView: View) {
+        Picasso.get()
+            .load(product.imageUrl)
+            .into(rootView.cashBanner)
     }
 }

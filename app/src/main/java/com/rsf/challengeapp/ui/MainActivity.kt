@@ -9,6 +9,7 @@ import com.rsf.challengeapp.R
 import com.rsf.challengeapp.model.Normal
 import com.rsf.challengeapp.model.Product
 import com.rsf.challengeapp.model.Special
+import com.rsf.challengeapp.model.SpotLight
 import com.rsf.challengeapp.util.textColor
 import com.rsf.challengeapp.util.word
 import com.rsf.challengeapp.viewmodel.MainViewModel
@@ -29,13 +30,14 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupProductListRecyclerView()
+        setupFeaturedProductListRecyclerView()
+
         getProducts()
-        setupRecyclerView()
     }
 
-    private fun setupRecyclerView() {
-        val rv = findViewById<RecyclerView>(R.id.rvProductList)
-        with(rv) {
+    private fun setupProductListRecyclerView() {
+        with(productListContainer.rvProductList) {
             layoutManager = LinearLayoutManager(applicationContext).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
             }
@@ -46,17 +48,28 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+    private fun setupFeaturedProductListRecyclerView() {
+        with(featuredProductsContainer.rvProductList) {
+            layoutManager = LinearLayoutManager(applicationContext).apply {
+                orientation = LinearLayoutManager.HORIZONTAL
+            }
+            hasFixedSize()
+            adapter = FeaturedProductListAdapter(emptyList()).apply {
+                interactionListener = ::onItemSelected
+            }
+        }
+    }
+
     private fun onItemSelected(product: Product) {
 
     }
 
     private fun getProducts() {
-        viewModel.getProductList().observe(this) {
-            it.fold({ products ->
-                products.find { it.type == Special }?.let { special ->
-                    setSpecialProductView(special)
-                }
+        viewModel.getProductList().observe(this) { result ->
+            result.fold({ products ->
+                products.find { it.type == Special }?.let { setSpecialProductView(it) }
                 setProductListView(products.filter { it.type == Normal })
+                setFeaturedProductListView(products.filter { it.type == SpotLight })
             }, {
                 Log.e(TAG, "Exception of $it")
             })
@@ -76,6 +89,13 @@ class MainActivity: AppCompatActivity() {
     private fun setProductListView(products: List<Product>) {
         with(productListContainer.rvProductList) {
             (adapter as ProductListAdapter).products = products
+            adapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun setFeaturedProductListView(products: List<Product>) {
+        with(featuredProductsContainer.rvProductList) {
+            (adapter as FeaturedProductListAdapter).products = products
             adapter?.notifyDataSetChanged()
         }
     }
