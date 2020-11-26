@@ -11,14 +11,7 @@ ext {
 }
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('/home/romildo/Desktop/debugKeystore.jks')
-            storePassword 'Aa123456'
-            keyAlias 'debugKeystoreAlias'
-            keyPassword 'Aa12345'
-        }
-    }
+
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
 
@@ -43,11 +36,9 @@ android {
 
     buildTypes {
         debug {
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
             debuggable true
-            minifyEnabled true
-            useProguard true
+            minifyEnabled false
+            useProguard false
             shrinkResources false
         }
 
@@ -58,7 +49,7 @@ android {
             minifyEnabled true
             useProguard true
             shrinkResources false
-            signingConfig signingConfigs.release
+
         }
     }
 }
